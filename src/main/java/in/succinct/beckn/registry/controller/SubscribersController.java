@@ -115,6 +115,11 @@ public class SubscribersController extends Controller {
         }catch (Exception ex){
             throw new RuntimeException(ex);
         }
+        // W11b: Optional signed-subscribe gate (registry.subscribe.verification=on|off)
+        if (SignedSubscribeVerifier.isEnabled()) {
+            SignedSubscribeVerifier.verify(payload, getPath().getHeaders());
+        }
+
         JSONAware jsonAware =JSONAwareWrapper.parse(payload);
         Subscribers subscribers = new Subscribers();
         if (jsonAware instanceof JSONObject){
